@@ -62,29 +62,40 @@ def download_pdf(selected_graph_plots):
             )
     else:
         st.error("No images to download.")
-
 def readCSV(uploaded_file):
-    raw_data = uploaded_file.read()
+    raw_data = uploaded_file.getvalue()
     detected_encoding = chardet.detect(raw_data)
-    encoding = detected_encoding['encoding']   
+    encoding = detected_encoding['encoding']
+    
     try:
+        if not raw_data.strip():  # Check if the file is empty
+            st.error("The uploaded file is empty. Please upload a valid CSV file.")
+            return None
+        
         df = pd.read_csv(uploaded_file, encoding=encoding)
         return df
+    except pd.errors.EmptyDataError:
+        st.error("The uploaded file appears to be empty. Please check the file content.")
+        return None
     except UnicodeDecodeError:
         try:
-            st.warning(f"Encoding {encoding} failed. Trying with 'utf-8' encoding...")
+            st.warning(f"Encoding {encoding} failed. Retrying with 'utf-8'...")
             uploaded_file.seek(0)
             df = pd.read_csv(uploaded_file, encoding='utf-8')
             return df
         except UnicodeDecodeError:
             try:
-                st.warning(f"Encoding 'utf-8' failed. Trying with 'ISO-8859-1' encoding...")
+                st.warning("Encoding 'utf-8' failed. Retrying with 'ISO-8859-1'...")
                 uploaded_file.seek(0)
                 df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
                 return df
             except Exception as e:
-                st.error(f"Error reading the file: {e}")
+                st.error(f"Error reading the file with fallback encodings: {e}")
                 return None
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {e}")
+        return None
+
 
 # Listing all the lists available in session states
 listVariables = ["rugplot","ecdf","kdeplot","histplot","displot","relplot","scatterplot","lineplot","catplot", "stripplot", "swarmplot",

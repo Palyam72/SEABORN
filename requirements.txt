@@ -1,7 +1,7 @@
 seaborn
 pandas
 matplotlib
-fpdf
+fpdf2
 streamlit
 streamlit-option-menu
 streamlit-extras

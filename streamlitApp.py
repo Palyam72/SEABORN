@@ -199,7 +199,7 @@ with col1:
 with col2:
     selectedGraph=st.selectbox("Select any graph to see the saved plots",st.session_state.keys())
     if selectedGraph:
-        for i in st.session_state[selectedGraph]:
-            st.pyplot(i)
-            if st.button("Download it into a pdf"):
-                download_pdf(st.session_state[selectedGraph])
+        for j,i in enumertae(st.session_state[selectedGraph]):
+            st.pyplot(i,key=j)
+        if st.button("Download it into a pdf"):
+            download_pdf(st.session_state[selectedGraph])

@@ -65,22 +65,19 @@ class RugPlot:
 
                     # Generate the rug plot
                     if is_bivariate:
-                        fig=sns.rugplot(
+                        st.pyplot(sns.rugplot(
                             data=self.data, x=self.x, y=self.y, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
                             legend=self.legend, ax=ax  # Pass ax here
-                        )
+                        ))
                     else:
-                        fig=sns.rugplot(
+                        st.pyplot(sns.rugplot(
                             data=self.data, x=self.x, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
                             legend=self.legend, ax=ax  # Pass ax here
-                        )
-
-                    # Display the plot
-                    st.pyplot(fig)  # Pass the figure here
+                        ))
 
                     # Save the plot
                     self.saved_plots.append(fig)

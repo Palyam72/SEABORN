@@ -200,6 +200,6 @@ with col2:
     selectedGraph=st.selectbox("Select any graph to see the saved plots",st.session_state.keys())
     if selectedGraph:
         for j,i in enumerate(st.session_state[selectedGraph]):
-            st.image(i,key=j,use_container_width=True)
+            st.pyplot(i)
         if st.button("Download it into a pdf"):
             download_pdf(st.session_state[selectedGraph])

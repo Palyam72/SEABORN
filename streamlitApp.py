@@ -200,10 +200,3 @@ with col1:
                 st.error("Invalid plot selection.")
         else:
             st.error("Failed to load the CSV file. Please upload a valid file.")
-with col2:
-    selectedGraph=st.selectbox("Select any graph to see the saved plots",st.session_state.keys())
-    if selectedGraph:
-        for j,i in enumerate(st.session_state[selectedGraph]):
-            st.pyplot(i)
-        if st.button("Download it into a pdf"):
-            download_pdf(st.session_state[selectedGraph])

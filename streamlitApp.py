@@ -2,6 +2,7 @@ import chardet
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
+from fpdf import FPDF
 
 # Importing all the entities from different python files
 from ECDF import *
@@ -31,7 +32,6 @@ from PAIRPLOT import *
 from PAIRGRID import *        
 from JOINTPLOT import *       
 from JOINTGRID import *      
-from fpdf import FPDF
 
 def download_pdf(selected_graph_plots):
     if selected_graph_plots:

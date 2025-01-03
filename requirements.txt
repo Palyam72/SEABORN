@@ -5,3 +5,4 @@ fpdf2
 streamlit
 streamlit-option-menu
 streamlit-extras
+os

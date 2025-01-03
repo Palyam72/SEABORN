@@ -57,30 +57,30 @@ class RugPlot:
                 try:
                     # Create the plot
                     st.header("Current Plot")
-                    plt.figure(figsize=(10, 6))
-                    plt.title(f"Rug Plot of {self.x} vs {self.y if is_bivariate else ''}")
-                    plt.xlabel(self.x)
+                    fig, ax = plt.subplots(figsize=(10, 6))  # Create a Figure and Axes object
+                    ax.set_title(f"Rug Plot of {self.x} vs {self.y if is_bivariate else ''}")
+                    ax.set_xlabel(self.x)
                     if is_bivariate:
-                        plt.ylabel(self.y)
+                        ax.set_ylabel(self.y)
 
                     # Generate the rug plot
                     if is_bivariate:
-                        fig=sns.rugplot(
+                        sns.rugplot(
                             data=self.data, x=self.x, y=self.y, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
-                            legend=self.legend
+                            legend=self.legend, ax=ax  # Pass ax here
                         )
                     else:
-                        fig=sns.rugplot(
+                        sns.rugplot(
                             data=self.data, x=self.x, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
-                            legend=self.legend
+                            legend=self.legend, ax=ax  # Pass ax here
                         )
 
                     # Display the plot
-                    st.pyplot(fig)
+                    st.pyplot(fig)  # Pass the figure here
 
                     # Save the plot
                     self.saved_plots.append(fig)

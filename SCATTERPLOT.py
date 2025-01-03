@@ -82,8 +82,8 @@ class ScatterPlot:
                 except Exception as e:
                     st.error(f"Error generating plot: {e}")
 
-        with tab1:
-            st.header("Documents Section")
+        with tab2:
+            st.header("Documents Section",divider='blue')
             st.subheader("Saved Plots")
 
             if self.saved_plots:

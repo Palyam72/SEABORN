@@ -35,32 +35,36 @@ from fpdf import FPDF
 
 def download_pdf(selected_graph_plots):
     if selected_graph_plots:
-        # Create instance of FPDF class
-        pdf = FPDF()
+        try:
+            # Create instance of FPDF class with default parameters
+            pdf = FPDF(orientation='P', unit='mm', format='A4')
 
-        # Loop through all images and add them to the PDF
-        for img in selected_graph_plots:
-            # Add a new page
-            pdf.add_page()
+            # Loop through all images and add them to the PDF
+            for img in selected_graph_plots:
+                if os.path.exists(img):  # Verify if the image file exists
+                    pdf.add_page()
 
-            # Add image to the page, making it take the full page width (210mm)
-            pdf.image(img, x=0, y=0, w=210)
+                    # Add image to the page (A4 size is 210mm x 297mm)
+                    pdf.image(img, x=0, y=0, w=210)
+                else:
+                    st.warning(f"Image not found: {img}")
 
-        # Save the PDF to a file
-        pdf_output = "plots_output.pdf"
-        pdf.output(pdf_output)
+            # Save the PDF to a file
+            pdf_output = "plots_output.pdf"
+            pdf.output(pdf_output)
 
-        # Provide the PDF for download in Streamlit
-        with open(pdf_output, "rb") as file:
-            st.download_button(
-                label="Download PDF",
-                data=file,
-                file_name=pdf_output,
-                mime="application/pdf"
-            )
+            # Provide the PDF for download in Streamlit
+            with open(pdf_output, "rb") as file:
+                st.download_button(
+                    label="Download PDF",
+                    data=file,
+                    file_name=pdf_output,
+                    mime="application/pdf"
+                )
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
     else:
         st.error("No images to download.")
-
 def readCSV(uploaded_file):
     raw_data = uploaded_file.getvalue()
     detected_encoding = chardet.detect(raw_data)

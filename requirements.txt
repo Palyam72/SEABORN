@@ -1,0 +1,7 @@
+seaborn
+pandas
+matplotlib
+fpdf
+streamlit
+streamlit-option-menu
+streamlit-extras

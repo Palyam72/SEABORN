@@ -77,8 +77,8 @@ class RugPlot:
                         sns.rugplot(
                             data=self.data, x=self.x, y=self.y, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
-                            palette=self.palette, hue_order=self.hue_order,
-                            hue_norm=self.hue_norm, legend=self.legend
+                            palette=self.palette, hue_order=self.hue_order,hue_norm=self.hue_norm,
+                            legend=self.legend
                         )
                     else:
                         sns.rugplot(

@@ -46,9 +46,9 @@ class RugPlot:
                         self.hue_norm = eval(self.hue_norm)  # Convert input to tuple
                     except:
                         st.warning("Invalid range format. Please enter a tuple like (10, 20).")
-                        self.hue_norm = None
+                        self.hue_norm = (10, 20)
                 else:
-                    self.hue_norm = None
+                    self.hue_norm = (10, 20)
 
             # Palette selection
             self.palette = st.selectbox(

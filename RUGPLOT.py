@@ -40,15 +40,6 @@ class RugPlot:
             self.hue_order = None
             if self.hue:
                 self.hue_order = st.multiselect("Select the hue order", self.data[self.hue].unique().tolist())
-                self.hue_norm = st.text_input("Enter normalization min and max range (e.g., (10, 20))")
-                if self.hue_norm:
-                    try:
-                        self.hue_norm = eval(self.hue_norm)  # Convert input to tuple
-                    except:
-                        st.warning("Invalid range format. Please enter a tuple like (10, 20).")
-                        self.hue_norm = (10, 20)
-                else:
-                    self.hue_norm = (10, 20)
 
             # Palette selection
             self.palette = st.selectbox(
@@ -77,7 +68,7 @@ class RugPlot:
                         sns.rugplot(
                             data=self.data, x=self.x, y=self.y, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
-                            palette=self.palette, hue_order=self.hue_order,hue_norm=self.hue_norm,
+                            palette=self.palette, hue_order=self.hue_order,
                             legend=self.legend
                         )
                     else:
@@ -85,7 +76,7 @@ class RugPlot:
                             data=self.data, x=self.x, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
-                            hue_norm=self.hue_norm, legend=self.legend
+                            legend=self.legend
                         )
 
                     # Display the plot

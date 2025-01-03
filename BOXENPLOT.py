@@ -104,8 +104,7 @@ class BoxenplotVisualizer:
             formatter=self.formatter,
             legend=self.legend,
             orient=self.orient,
-            native_scale=self.native_scale
-        )
+            native_scale=self.native_scale)
         if st.button("PLot the graph",use_container_width=True):
             st.pyplot(fig)
             self.saved_plots.append(fig)

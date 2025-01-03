@@ -65,14 +65,14 @@ class RugPlot:
 
                     # Generate the rug plot
                     if is_bivariate:
-                        sns.rugplot(
+                        fig=sns.rugplot(
                             data=self.data, x=self.x, y=self.y, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
                             legend=self.legend
                         )
                     else:
-                        sns.rugplot(
+                        fig=sns.rugplot(
                             data=self.data, x=self.x, hue=self.hue,
                             height=self.height, expand_margins=self.expand_margins,
                             palette=self.palette, hue_order=self.hue_order,
@@ -80,10 +80,10 @@ class RugPlot:
                         )
 
                     # Display the plot
-                    st.pyplot(plt.gcf())
+                    st.pyplot(fig)
 
                     # Save the plot
-                    self.saved_plots.append(plt.gcf())
+                    self.saved_plots.append(fig)
 
                 except Exception as e:
                     st.error(f"Error generating plot: {e}")

@@ -89,7 +89,7 @@ def readCSV(uploaded_file):
                 return "None"
 
 # Listing all the lists available in session states
-listVariables = ["rugplot","ecdf","kdeplot","histplot","displot","relplot","scatterplot","lineplot","catplot", "stripplot", "swarmplot",
+listVariables = ["ecdf","kdeplot","histplot","displot","relplot","scatterplot","lineplot","catplot", "stripplot", "swarmplot",
                  "boxplot", "violinplot", "boxenplot", "pointplot", "barplot", "countplot",
                  "lmplot", "regplot", "residplot", "heatmap",
                  "clustermap", "FacetGrid", "pairplot", "PairGrid", "jointplot", "JointGrid"]

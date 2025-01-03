@@ -1,9 +1,7 @@
 import chardet
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from fpdf import FPDF
 
 # Importing all the entities from different python files
 from ECDF import *
@@ -32,7 +30,8 @@ from FACETGRID import *
 from PAIRPLOT import *        
 from PAIRGRID import *        
 from JOINTPLOT import *       
-from JOINTGRID import *
+from JOINTGRID import *      
+from fpdf import FPDF
 
 def download_pdf(selected_graph_plots):
     if selected_graph_plots:
@@ -41,12 +40,11 @@ def download_pdf(selected_graph_plots):
 
         # Loop through all images and add them to the PDF
         for img in selected_graph_plots:
+            # Add a new page
             pdf.add_page()
 
-            # Save the matplotlib plot as an image
-            img_path = f"temp_plot_{selected_graph_plots.index(img)}.png"
-            img.savefig(img_path)
-            pdf.image(img_path, x=0, y=0, w=210)
+            # Add image to the page, making it take the full page width (210mm)
+            pdf.image(img, x=0, y=0, w=210)
 
         # Save the PDF to a file
         pdf_output = "plots_output.pdf"
@@ -62,40 +60,29 @@ def download_pdf(selected_graph_plots):
             )
     else:
         st.error("No images to download.")
+
 def readCSV(uploaded_file):
     raw_data = uploaded_file.getvalue()
     detected_encoding = chardet.detect(raw_data)
-    encoding = detected_encoding['encoding']
-    
+    encoding = detected_encoding['encoding']   
     try:
-        if not raw_data.strip():  # Check if the file is empty
-            st.error("The uploaded file is empty. Please upload a valid CSV file.")
-            return None
-        
         df = pd.read_csv(uploaded_file, encoding=encoding)
         return df
-    except pd.errors.EmptyDataError:
-        st.error("The uploaded file appears to be empty. Please check the file content.")
-        return None
     except UnicodeDecodeError:
         try:
-            st.warning(f"Encoding {encoding} failed. Retrying with 'utf-8'...")
+            print(f"Encoding {encoding} failed. Trying with 'utf-8' encoding...")
             uploaded_file.seek(0)
             df = pd.read_csv(uploaded_file, encoding='utf-8')
             return df
         except UnicodeDecodeError:
             try:
-                st.warning("Encoding 'utf-8' failed. Retrying with 'ISO-8859-1'...")
+                print(f"Encoding 'utf-8' failed. Trying with 'ISO-8859-1' encoding...")
                 uploaded_file.seek(0)
                 df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
                 return df
             except Exception as e:
-                st.error(f"Error reading the file with fallback encodings: {e}")
-                return None
-    except Exception as e:
-        st.error(f"An unexpected error occurred: {e}")
-        return None
-
+                print(f"Error reading the file: {e}")
+                return "None"
 
 # Listing all the lists available in session states
 listVariables = ["rugplot","ecdf","kdeplot","histplot","displot","relplot","scatterplot","lineplot","catplot", "stripplot", "swarmplot",
@@ -111,18 +98,21 @@ for i in listVariables:
 # Assigning streamlit main components to streamlit's sidebar
 file = st.sidebar.file_uploader("Upload the CSV file", type=["csv"])
 st.sidebar.divider()
-selectedPlot = st.sidebar.radio("Select the plot", listVariables)
+selectedPlot =st.sidebar.pills("Select the plot", listVariables)
+
 
 # Writing the logic for selecting and plotting based on the selected plot type
-col1, col2 = st.columns([2, 1])
+col1,col2=st.columns([2,1])
 with col1:
     if file is not None:
         df = readCSV(file)
-
-        # Check if df is a DataFrame and not None
+        
+        # Check if df is a DataFrame and not "None" string
         if isinstance(df, pd.DataFrame):
+            # Main functionality
             if selectedPlot == "relplot":
-                relplot = Relplot(df, st.session_state["relplot"])
+                # Corrected variable name
+                relplot = Relplot(df, st.session_state.get("relplot", []))  # Ensure session_state key exists
                 relplot.display()
             elif selectedPlot == "scatterplot":
                 scatterplot = ScatterPlot(df, st.session_state["scatterplot"])
@@ -146,70 +136,70 @@ with col1:
                 rugplot = RugPlot(df, st.session_state["rugplot"])
                 rugplot.display()
             elif selectedPlot == "catplot":
-                catplot = Catplot(df, st.session_state["catplot"])
+                catplot=Catplot(df,st.session_state["catplot"])
                 catplot.display()
             elif selectedPlot == "stripplot":
-                stripplot = Stripplot(df, st.session_state["stripplot"])
+                stripplot=Stripplot(df,st.session_state["stripplot"])
                 stripplot.display()
             elif selectedPlot == "swarmplot":
-                swarmplot = Swarmplot(df, st.session_state["swarmplot"])
+                swarmplot=Swarmplot(df,st.session_state["swarmplot"])
                 swarmplot.display()
             elif selectedPlot == "boxplot":
-                boxplot = Boxplot(df, st.session_state["boxplot"])
+                boxplot=Boxplot(df,st.session_state["boxplot"])
                 boxplot.display()
             elif selectedPlot == "violinplot":
-                violinplot = ViolinPlotVisualizer(df, st.session_state["violinplot"])
+                violinplot=ViolinPlotVisualizer(df,st.session_state["violinplot"])
                 violinplot.display()
             elif selectedPlot == "boxenplot":
-                boxenplot = BoxenplotVisualizer(df, st.session_state["boxenplot"])
+                boxenplot=BoxenplotVisualizer(df,st.session_state["boxenplot"])
                 boxenplot.display()
             elif selectedPlot == "pointplot":
-                pointplot = PointplotVisualizer(df, st.session_state["pointplot"])
+                pointplot=PointplotVisualizer(df,st.session_state["pointplot"])
                 pointplot.display()
             elif selectedPlot == "barplot":
-                barplot = BarplotVisualizer(df, st.session_state["barplot"])
+                barplot=BarplotVisualizer(df,st.session_state["barplot"])
                 barplot.display()
             elif selectedPlot == "countplot":
-                countplot = CountplotVisualizer(df, st.session_state["countplot"])
+                countplot=CountplotVisualizer(df,st.session_state["countplot"])
                 countplot.display()
             elif selectedPlot == "lmplot":
-                lmplot = LmplotVisualizer(df, st.session_state["lmplot"])
+                lmplot=LmplotVisualizer(df,st.session_state["lmplot"])
                 lmplot.display()
             elif selectedPlot == "regplot":
-                regplot = RegplotVisualizer(df, st.session_state["regplot"])
+                regplot=RegplotVisualizer(df,st.session_state["stripplot"])
                 regplot.display()
             elif selectedPlot == "residplot":
-                residplot = ResidplotVisualizer(df, st.session_state["residplot"])
+                residplot=ResidplotVisualizer(df,st.session_state["stripplot"])
                 residplot.display()
             elif selectedPlot == "heatmap":
-                heatmap = HeatmapVisualizer(df, st.session_state["heatmap"])
+                heatmap=HeatmapVisualizer(df,st.session_state["stripplot"])
                 heatmap.display()
             elif selectedPlot == "clustermap":
-                clustermap = ClustermapVisualizer(df, st.session_state["clustermap"])
+                clustermap=ClustermapVisualizer(df,st.session_state["stripplot"])
                 clustermap.display()
             elif selectedPlot == "FacetGrid":
-                facetgrid = FacetGridVisualizer(df, st.session_state["FacetGrid"])
-                facetgrid.display()
+                FacetGrid=FacetGridVisualizer(df,st.session_state["stripplot"])
+                FacetGrid.display()
             elif selectedPlot == "pairplot":
-                pairplot = PairPlotVisualizer(df, st.session_state["pairplot"])
+                pairplot=PairPlotVisualizer(df,st.session_state["stripplot"])
                 pairplot.display()
             elif selectedPlot == "PairGrid":
-                pairgrid = PairGridVisualizer(df, st.session_state["PairGrid"])
-                pairgrid.display()
+                PairGrid=PairGridVisualizer(df,st.session_state["stripplot"])
+                PairGrid.display()
             elif selectedPlot == "jointplot":
-                jointplot = JointPlotVisualizer(df, st.session_state["jointplot"])
+                jointplot=JointPlotVisualizer(df,st.session_state["stripplot"])
                 jointplot.display()
             elif selectedPlot == "JointGrid":
-                jointgrid = JointGridVisualizer(df, st.session_state["JointGrid"])
-                jointgrid.display()
+                JointGrid=JointGridVisualizer(df,st.session_state["stripplot"])
+                JointGrid.display()
             else:
                 st.error("Invalid plot selection.")
         else:
             st.error("Failed to load the CSV file. Please upload a valid file.")
 with col2:
-    selectedGraph = st.selectbox("Select any graph to see the saved plots", list(st.session_state.keys()))
+    selectedGraph=st.selectbox("Select any graph to see the saved plots",st.session_state.keys())
     if selectedGraph:
-        for j, i in enumerate(st.session_state[selectedGraph]):
-            st.pyplot(i, key=j)
-        if st.button("Download it into a pdf"):
-            download_pdf(st.session_state[selectedGraph])
+        for i in st.session_state[selectedGraph]:
+            st.image(i,caption=f"Plot {i}",width=400,height=300)
+            if st.button("Download it into a pdf"):
+                download_pdf(st.session_state[selectedGraph])
